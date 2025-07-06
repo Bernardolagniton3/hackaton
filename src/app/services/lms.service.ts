@@ -14,7 +14,7 @@ export interface Course {
   enrolledStudents: number;
   rating: number;
   imageUrl?: string;
-  price: number;
+ 
   isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -106,191 +106,192 @@ export class LMSService {
   public enrollments$ = this.enrollmentsSubject.asObservable();
 
   // Sample data
-  private courses: Course[] = [
-    {
-      id: 1,
-      title: 'Introduction to Web Development',
-      description: 'Learn the fundamentals of HTML, CSS, and JavaScript to build modern websites.',
-      instructor: 'Sarah Wilson',
-      category: 'Programming',
-      level: 'beginner',
-      duration: 20,
-      lessons: [
-        {
+  // Define courses related to TNVS driver training
+  // Define courses related to TNVS driver training without price
+private courses: Course[] = [ 
+  {
+    id: 1,
+    title: 'TNVS Driver Training 101: Introduction to TNVS',
+    description: 'Learn the fundamentals of TNVS, vehicle safety, customer service, and regulations to become a successful driver.',
+    instructor: 'Sarah Wilson',
+    category: 'Driver Training',
+    level: 'beginner',
+    duration: 20,
+    lessons: [
+      {
+        id: 1,
+        courseId: 1,
+        title: 'What is TNVS?',
+        description: 'Understand what TNVS is and how it operates in the transportation ecosystem.',
+        content: 'TNVS stands for Transport Network Vehicle Service, which allows drivers to use their private vehicles to transport passengers using a mobile app.',
+        duration: 45,
+        order: 1,
+        isCompleted: false,
+        materials: ['tnvs-introduction.pdf', 'tnvs-overview.pptx'],
+        quiz: {
           id: 1,
-          courseId: 1,
-          title: 'HTML Basics',
-          description: 'Learn the structure of HTML documents and basic elements.',
-          content: 'HTML is the standard markup language for creating web pages...',
-          duration: 45,
-          order: 1,
-          isCompleted: false,
-          materials: ['html-basics.pdf', 'code-examples.zip'],
-          quiz: {
-            id: 1,
-            lessonId: 1,
-            questions: [
-              {
-                id: 1,
-                text: 'What does HTML stand for?',
-                type: 'multiple-choice',
-                options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language'],
-                correctAnswer: 0,
-                points: 10
-              }
-            ],
-            timeLimit: 15,
-            passingScore: 70
-          }
-        },
-        {
+          lessonId: 1,
+          questions: [
+            {
+              id: 1,
+              text: 'What does TNVS stand for?',
+              type: 'multiple-choice',
+              options: ['Transport Network Vehicle Service', 'Transnational Vehicle Safety Service', 'Transport Network Valet Service'],
+              correctAnswer: 0,
+              points: 10
+            }
+          ],
+          timeLimit: 15,
+          passingScore: 70
+        }
+      },
+      {
+        id: 2,
+        courseId: 1,
+        title: 'Vehicle Safety & Maintenance',
+        description: 'Learn the essential vehicle safety measures and routine maintenance to ensure passenger and driver safety.',
+        content: 'TNVS drivers are responsible for vehicle safety, which includes routine checks, maintenance, and addressing any safety concerns before each trip.',
+        duration: 60,
+        order: 2,
+        isCompleted: false,
+        materials: ['vehicle-safety-guide.pdf', 'maintenance-checklist.pdf'],
+        quiz: {
           id: 2,
-          courseId: 1,
-          title: 'CSS Styling',
-          description: 'Learn how to style your HTML elements with CSS.',
-          content: 'CSS is used to style and layout web pages...',
-          duration: 60,
-          order: 2,
-          isCompleted: false,
-          materials: ['css-guide.pdf'],
-          quiz: {
-            id: 2,
-            lessonId: 2,
-            questions: [
-              {
-                id: 2,
-                text: 'Which CSS property is used to change the text color?',
-                type: 'multiple-choice',
-                options: ['text-color', 'color', 'font-color'],
-                correctAnswer: 1,
-                points: 10
-              }
-            ],
-            timeLimit: 20,
-            passingScore: 80
-          }
+          lessonId: 2,
+          questions: [
+            {
+              id: 2,
+              text: 'What is the most important vehicle safety feature for TNVS drivers?',
+              type: 'multiple-choice',
+              options: ['Airbags', 'Brakes', 'Seat belts'],
+              correctAnswer: 1,
+              points: 10
+            }
+          ],
+          timeLimit: 20,
+          passingScore: 80
         }
-      ],
-      enrolledStudents: 45,
-      rating: 4.5,
-      imageUrl: 'assets/img/courses/web-dev.jpg',
-      price: 99.99,
-      isPublished: true,
-      createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-15')
-    },
-    {
-      id: 2,
-      title: 'Advanced JavaScript',
-      description: 'Master JavaScript programming with ES6+ features and modern frameworks.',
-      instructor: 'Mike Smith',
-      category: 'Programming',
-      level: 'advanced',
-      duration: 30,
-      lessons: [
-        {
+      }
+    ],
+    enrolledStudents: 45,
+    rating: 4.5,
+    imageUrl: 'assets/img/courses/tnvs-introduction.jpg',
+    isPublished: true,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-01-15')
+  },
+  {
+    id: 2,
+    title: 'TNVS Driver Training 101: Customer Service & Communication',
+    description: 'Master the essential skills needed for providing exceptional customer service in TNVS.',
+    instructor: 'Mike Smith',
+    category: 'Driver Training',
+    level: 'beginner',
+    duration: 30,
+    lessons: [
+      {
+        id: 3,
+        courseId: 2,
+        title: 'Customer Service Essentials',
+        description: 'Learn how to communicate professionally and handle customer requests and complaints.',
+        content: 'Effective communication is a key skill for TNVS drivers. This lesson focuses on how to be polite, helpful, and resolve disputes.',
+        duration: 90,
+        order: 1,
+        isCompleted: false,
+        materials: ['customer-service-guide.pdf', 'communication-tips.pdf'],
+        quiz: {
           id: 3,
-          courseId: 2,
-          title: 'ES6 Features',
-          description: 'Learn modern JavaScript features like arrow functions and destructuring.',
-          content: 'ES6 introduced many new features to JavaScript...',
-          duration: 90,
-          order: 1,
-          isCompleted: false,
-          materials: ['es6-guide.pdf', 'practice-exercises.zip'],
-          quiz: {
-            id: 3,
-            lessonId: 3,
-            questions: [
-              {
-                id: 3,
-                text: 'What is the correct syntax for an arrow function?',
-                type: 'multiple-choice',
-                options: ['function() => {}', '() => {}', '=> function() {}'],
-                correctAnswer: 1,
-                points: 15
-              }
-            ],
-            timeLimit: 25,
-            passingScore: 75
-          }
+          lessonId: 3,
+          questions: [
+            {
+              id: 3,
+              text: 'How should you handle a passenger who is complaining about the trip?',
+              type: 'multiple-choice',
+              options: ['Ignore the complaint', 'Apologize and resolve the issue calmly', 'Ask the passenger to get out of the car'],
+              correctAnswer: 1,
+              points: 15
+            }
+          ],
+          timeLimit: 25,
+          passingScore: 75
         }
-      ],
-      enrolledStudents: 28,
-      rating: 4.8,
-      imageUrl: 'assets/img/courses/javascript.jpg',
-      price: 149.99,
-      isPublished: true,
-      createdAt: new Date('2024-02-01'),
-      updatedAt: new Date('2024-02-01')
-    },
-    {
-      id: 3,
-      title: 'Digital Marketing Fundamentals',
-      description: 'Learn the basics of digital marketing including SEO, social media, and content marketing.',
-      instructor: 'Emma Davis',
-      category: 'Marketing',
-      level: 'beginner',
-      duration: 15,
-      lessons: [
-        {
+      }
+    ],
+    enrolledStudents: 28,
+    rating: 4.8,
+    imageUrl: 'assets/img/courses/tnvs-customer-service.jpg',
+    isPublished: true,
+    createdAt: new Date('2024-02-01'),
+    updatedAt: new Date('2024-02-01')
+  },
+  {
+    id: 3,
+    title: 'TNVS Driver Training 101: Legal Responsibilities & Compliance',
+    description: 'Understand the legal and regulatory requirements for TNVS drivers, including licensing, insurance, and passenger safety.',
+    instructor: 'Emma Davis',
+    category: 'Driver Training',
+    level: 'beginner',
+    duration: 15,
+    lessons: [
+      {
+        id: 4,
+        courseId: 3,
+        title: 'Legal Requirements for TNVS Drivers',
+        description: 'Learn about the legal obligations for TNVS drivers, including necessary documentation and insurance.',
+        content: 'As a TNVS driver, it is critical to be familiar with local regulations, vehicle registration, and maintaining the right insurance coverage.',
+        duration: 75,
+        order: 1,
+        isCompleted: false,
+        materials: ['tnvs-legal-requirements.pdf', 'insurance-guide.pdf'],
+        quiz: {
           id: 4,
-          courseId: 3,
-          title: 'SEO Basics',
-          description: 'Learn search engine optimization fundamentals.',
-          content: 'SEO helps your website rank higher in search results...',
-          duration: 75,
-          order: 1,
-          isCompleted: false,
-          materials: ['seo-guide.pdf'],
-          quiz: {
-            id: 4,
-            lessonId: 4,
-            questions: [
-              {
-                id: 4,
-                text: 'What does SEO stand for?',
-                type: 'multiple-choice',
-                options: ['Search Engine Optimization', 'Social Engine Optimization', 'Site Engine Optimization'],
-                correctAnswer: 0,
-                points: 10
-              }
-            ],
-            timeLimit: 20,
-            passingScore: 70
-          }
+          lessonId: 4,
+          questions: [
+            {
+              id: 4,
+              text: 'Which document is required to operate as a TNVS driver?',
+              type: 'multiple-choice',
+              options: ['Driving License', 'Passenger Car Registration', 'Vehicle Insurance'],
+              correctAnswer: 0,
+              points: 10
+            }
+          ],
+          timeLimit: 20,
+          passingScore: 70
         }
-      ],
-      enrolledStudents: 67,
-      rating: 4.3,
-      imageUrl: 'assets/img/courses/marketing.jpg',
-      price: 79.99,
-      isPublished: true,
-      createdAt: new Date('2024-01-20'),
-      updatedAt: new Date('2024-01-20')
-    }
-  ];
+      }
+    ],
+    enrolledStudents: 67,
+    rating: 4.3,
+    imageUrl: 'assets/img/courses/tnvs-legal.jpg',
+    isPublished: true,
+    createdAt: new Date('2024-01-20'),
+    updatedAt: new Date('2024-01-20')
+  }
+];
 
-  private enrollments: Enrollment[] = [
-    {
+// Define enrollments for TNVS driver training
+private enrollments: Enrollment[] = [
+  {
+    id: 1,
+    studentId: 1,
+    courseId: 1,
+    enrolledAt: new Date('2024-01-20'),
+    status: 'active',
+    progress: {
       id: 1,
       studentId: 1,
       courseId: 1,
-      enrolledAt: new Date('2024-01-20'),
-      status: 'active',
-      progress: {
-        id: 1,
-        studentId: 1,
-        courseId: 1,
-        completedLessons: [1],
-        currentLesson: 2,
-        overallProgress: 50,
-        timeSpent: 120,
-        lastAccessed: new Date(),
-        certificateEarned: false
-      }
+      completedLessons: [1],
+      currentLesson: 2,
+      overallProgress: 50,
+      timeSpent: 120,
+      lastAccessed: new Date(),
+      certificateEarned: false
     }
-  ];
+  }
+];
+
 
   constructor() {
     this.coursesSubject.next(this.courses);
