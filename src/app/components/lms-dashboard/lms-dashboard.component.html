@@ -1,0 +1,245 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <!-- Header -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">
+              <i class="material-icons">school</i>
+              Learning Management System
+            </h4>
+            <p class="card-category">
+              Discover, enroll, and track your learning progress
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Analytics -->
+    <div class="row" *ngIf="currentUser">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-warning card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">book</i>
+            </div>
+            <p class="card-category">Enrolled Courses</p>
+            <h3 class="card-title">{{ getTotalEnrolledCourses() }}</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons text-warning">trending_up</i>
+              <a href="javascript:void(0)">View all courses</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-success card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">check_circle</i>
+            </div>
+            <p class="card-category">Average Progress</p>
+            <h3 class="card-title">{{ getAverageProgress() }}%</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons text-success">trending_up</i>
+              <a href="javascript:void(0)">View progress</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-info card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">schedule</i>
+            </div>
+            <p class="card-category">Time Spent</p>
+            <h3 class="card-title">{{ getTotalTimeSpent() }} min</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons text-info">schedule</i>
+              <a href="javascript:void(0)">Learning time</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header card-header-danger card-header-icon">
+            <div class="card-icon">
+              <i class="material-icons">emoji_events</i>
+            </div>
+            <p class="card-category">Completed</p>
+            <h3 class="card-title">{{ getCompletedCourses() }}</h3>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons text-danger">emoji_events</i>
+              <a href="javascript:void(0)">View certificates</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">
+              <i class="material-icons">filter_list</i>
+              Course Filters
+            </h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Category</mat-label>
+                  <mat-select [(value)]="selectedCategory">
+                    <mat-option *ngFor="let category of categories" [value]="category">
+                      {{ category === 'all' ? 'All Categories' : category }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Level</mat-label>
+                  <mat-select [(value)]="selectedLevel">
+                    <mat-option *ngFor="let level of levels" [value]="level">
+                      {{ level === 'all' ? 'All Levels' : level | titlecase }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Grid -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">
+              <i class="material-icons">library_books</i>
+              Available Courses
+            </h4>
+          </div>
+          <div class="card-body">
+            <!-- Loading Spinner -->
+            <div *ngIf="isLoading" class="text-center">
+              <mat-spinner diameter="50"></mat-spinner>
+              <p>Loading courses...</p>
+            </div>
+
+            <!-- Course Grid -->
+            <div *ngIf="!isLoading" class="row">
+              <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of getFilteredCourses()">
+                <div class="card course-card">
+                  <div class="card-header" [style.background-image]="'url(' + (course.imageUrl || 'assets/img/courses/default.jpg') + ')'">
+                    <div class="course-overlay">
+                      <div class="course-level">
+                        <span class="badge badge-{{ getLevelColor(course.level) }}">
+                          {{ course.level | titlecase }}
+                        </span>
+                      </div>
+                      <div class="course-rating">
+                        <i class="material-icons">star</i>
+                        <span>{{ course.rating }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="course-category">
+                      <i class="material-icons">{{ getCategoryIcon(course.category) }}</i>
+                      <span>{{ course.category }}</span>
+                    </div>
+                    <h5 class="card-title">{{ course.title }}</h5>
+                    <p class="card-text">{{ course.description }}</p>
+                    
+                    <div class="course-meta">
+                      <div class="meta-item">
+                        <i class="material-icons">person</i>
+                        <span>{{ course.instructor }}</span>
+                      </div>
+                      <div class="meta-item">
+                        <i class="material-icons">schedule</i>
+                        <span>{{ course.duration }} hours</span>
+                      </div>
+                      <div class="meta-item">
+                        <i class="material-icons">group</i>
+                        <span>{{ course.enrolledStudents }} students</span>
+                      </div>
+                    </div>
+
+                    <!-- Enrollment Progress -->
+                    <div *ngIf="isEnrolled(course.id)" class="enrollment-progress">
+                      <div class="progress-info">
+                        <span>Progress: {{ getEnrollmentProgress(course.id) }}%</span>
+                        <span class="status-badge status-{{ getEnrollmentStatus(course.id) }}">
+                          {{ getEnrollmentStatus(course.id) | titlecase }}
+                        </span>
+                      </div>
+                      <mat-progress-bar 
+                        mode="determinate" 
+                        [value]="getEnrollmentProgress(course.id)"
+                        [ngClass]="'progress-' + getLevelColor(course.level)">
+                      </mat-progress-bar>
+                    </div>
+
+                    <div class="course-actions">
+                      <div class="course-price">
+                        <span class="price">${{ course.price }}</span>
+                      </div>
+                      <div class="action-buttons">
+                        <button *ngIf="!isEnrolled(course.id)" 
+                                mat-raised-button 
+                                color="primary" 
+                                (click)="enrollInCourse(course.id)"
+                                class="enroll-btn">
+                          <i class="material-icons">add</i>
+                          Enroll Now
+                        </button>
+                        <button *ngIf="isEnrolled(course.id)" 
+                                mat-raised-button 
+                                color="accent"
+                                class="continue-btn">
+                          <i class="material-icons">play_arrow</i>
+                          Continue Learning
+                        </button>
+                        <button mat-icon-button 
+                                color="primary"
+                                class="info-btn">
+                          <i class="material-icons">info</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- No Courses Message -->
+            <div *ngIf="!isLoading && getFilteredCourses().length === 0" class="text-center">
+              <i class="material-icons no-courses-icon">school</i>
+              <h4>No courses found</h4>
+              <p>Try adjusting your filters or check back later for new courses.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

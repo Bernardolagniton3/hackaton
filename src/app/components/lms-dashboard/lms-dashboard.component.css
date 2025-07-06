@@ -1,0 +1,359 @@
+/* LMS Dashboard Styles */
+.main-content {
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Course Card Styles */
+.course-card {
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.course-card .card-header {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  border-radius: 8px 8px 0 0;
+}
+
+.course-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+.course-level .badge {
+  font-size: 0.75rem;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-weight: 500;
+}
+
+.course-rating {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: #ff9800;
+}
+
+.course-rating i {
+  font-size: 16px;
+  margin-right: 5px;
+}
+
+.course-card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.course-category {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.course-category i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.course-card .card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+  line-height: 1.3;
+}
+
+.course-card .card-text {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+.course-meta {
+  margin-bottom: 15px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.meta-item i {
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Enrollment Progress */
+.enrollment-progress {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-active {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-completed {
+  background: #e8f5e8;
+  color: #388e3c;
+}
+
+.status-dropped {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+/* Progress Bar Colors */
+.progress-success {
+  color: #4caf50;
+}
+
+.progress-warning {
+  color: #ff9800;
+}
+
+.progress-danger {
+  color: #f44336;
+}
+
+.progress-primary {
+  color: #2196f3;
+}
+
+/* Course Actions */
+.course-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.course-price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.price {
+  color: #2196f3;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enroll-btn, .continue-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.info-btn {
+  min-width: 40px;
+  height: 40px;
+}
+
+/* No Courses Message */
+.no-courses-icon {
+  font-size: 4rem;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* Filter Styles */
+.mat-form-field {
+  margin-bottom: 15px;
+}
+
+/* Stats Cards */
+.card-stats {
+  margin-bottom: 20px;
+}
+
+.card-stats .card-header {
+  padding: 20px;
+}
+
+.card-stats .card-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.card-stats .card-category {
+  margin: 0;
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.card-stats .card-footer {
+  padding: 15px 20px;
+  background: transparent;
+}
+
+.card-stats .stats {
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.card-stats .stats a {
+  color: #999;
+  text-decoration: none;
+}
+
+.card-stats .stats a:hover {
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-card {
+    margin-bottom: 20px;
+  }
+  
+  .course-actions {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .action-buttons {
+    justify-content: center;
+  }
+  
+  .course-price {
+    text-align: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-content {
+    padding: 10px;
+  }
+  
+  .course-card .card-header {
+    height: 150px;
+  }
+  
+  .course-overlay {
+    padding: 10px;
+  }
+  
+  .course-card .card-body {
+    padding: 15px;
+  }
+}
+
+/* Loading Spinner */
+.text-center {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.text-center p {
+  margin-top: 15px;
+  color: #666;
+}
+
+/* Badge Colors */
+.badge-success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ff9800;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #f44336;
+  color: white;
+}
+
+.badge-primary {
+  background-color: #2196f3;
+  color: white;
+}
+
+/* Animation for course cards */
+.course-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover effects for buttons */
+.enroll-btn:hover, .continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info-btn:hover {
+  background-color: rgba(33, 150, 243, 0.1);
+} 

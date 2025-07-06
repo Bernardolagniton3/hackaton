@@ -1,0 +1,207 @@
+<div class="ocr-processor-container">
+  <!-- Document Type Selection -->
+  <mat-card class="document-type-card">
+    <mat-card-header>
+      <mat-card-title>
+        <i class="material-icons">category</i>
+        Document Type
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-button-toggle-group [(value)]="selectedDocumentType" class="document-type-group">
+        <mat-button-toggle *ngFor="let type of documentTypes" [value]="type.value">
+          <i class="material-icons">{{ type.icon }}</i>
+          {{ type.label }}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Document Capture Component -->
+  <app-document-capture (documentCaptured)="onDocumentCaptured($event)"></app-document-capture>
+
+  <!-- Processing Progress -->
+  <mat-card *ngIf="isProcessing" class="progress-card">
+    <mat-card-content>
+      <div class="progress-container">
+        <h3>Processing Document...</h3>
+        <mat-progress-bar mode="determinate" [value]="processingProgress"></mat-progress-bar>
+        <p>{{ processingProgress }}% Complete</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Results Section -->
+  <div *ngIf="documentData && validationResult" class="results-section">
+    
+    <!-- Document Image and Basic Info -->
+    <mat-card class="document-info-card">
+      <mat-card-header>
+        <mat-card-title>
+          <i class="material-icons">document_scanner</i>
+          Processed Document
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ documentData.documentType | titlecase }} - {{ documentData.documentType === 'id' ? 'ID Document' : 
+             documentData.documentType === 'receipt' ? 'Receipt' : 
+             documentData.documentType === 'invoice' ? 'Invoice' : 'Other Document' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="document-preview">
+          <img [src]="documentData.imageUrl" alt="Document preview" class="document-image">
+          <div class="document-stats">
+            <div class="stat-item">
+              <span class="stat-label">Confidence:</span>
+              <span class="stat-value" [ngClass]="getConfidenceColorClass(documentData.confidence)">
+                {{ documentData.confidence.toFixed(1) }}%
+              </span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Quality Score:</span>
+              <span class="stat-value" [ngClass]="getValidationStatusClass(validationResult)">
+                {{ validationResult.qualityScore.toFixed(1) }}%
+              </span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Status:</span>
+              <span class="stat-value" [ngClass]="getValidationStatusClass(validationResult)">
+                {{ validationResult.isValid ? 'Valid' : 'Invalid' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Extracted Data -->
+    <mat-card class="extracted-data-card">
+      <mat-card-header>
+        <mat-card-title>
+          <i class="material-icons">data_extraction</i>
+          Extracted Data
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="extracted-data-grid" *ngIf="getFormattedExtractedData().length > 0">
+          <div class="data-item" *ngFor="let item of getFormattedExtractedData()">
+            <span class="data-label">{{ item.key }}:</span>
+            <span class="data-value">{{ item.value }}</span>
+          </div>
+        </div>
+        <div class="no-data" *ngIf="getFormattedExtractedData().length === 0">
+          <i class="material-icons">info</i>
+          <p>No structured data extracted. Raw text available below.</p>
+        </div>
+        
+        <!-- Raw Text -->
+        <div class="raw-text-section" *ngIf="documentData.rawText">
+          <h4>Raw Extracted Text:</h4>
+          <div class="raw-text-content">
+            <pre>{{ documentData.rawText }}</pre>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Validation Results -->
+    <mat-card class="validation-card">
+      <mat-card-header>
+        <mat-card-title>
+          <i class="material-icons">verified</i>
+          Validation Results
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        
+        <!-- Errors -->
+        <div class="validation-section" *ngIf="validationResult.errors.length > 0">
+          <h4 class="error-title">
+            <i class="material-icons">error</i>
+            Errors ({{ validationResult.errors.length }})
+          </h4>
+          <ul class="error-list">
+            <li *ngFor="let error of validationResult.errors">{{ error }}</li>
+          </ul>
+        </div>
+
+        <!-- Warnings -->
+        <div class="validation-section" *ngIf="validationResult.warnings.length > 0">
+          <h4 class="warning-title">
+            <i class="material-icons">warning</i>
+            Warnings ({{ validationResult.warnings.length }})
+          </h4>
+          <ul class="warning-list">
+            <li *ngFor="let warning of validationResult.warnings">{{ warning }}</li>
+          </ul>
+        </div>
+
+        <!-- Success Message -->
+        <div class="validation-section success" *ngIf="validationResult.errors.length === 0 && validationResult.warnings.length === 0">
+          <h4 class="success-title">
+            <i class="material-icons">check_circle</i>
+            Validation Passed
+          </h4>
+          <p>All validation checks passed successfully!</p>
+        </div>
+
+        <!-- Improvement Suggestions -->
+        <div class="suggestions-section" *ngIf="getImprovementSuggestions().length > 0">
+          <h4>
+            <i class="material-icons">lightbulb</i>
+            Improvement Suggestions
+          </h4>
+          <ul class="suggestions-list">
+            <li *ngFor="let suggestion of getImprovementSuggestions()">{{ suggestion }}</li>
+          </ul>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Action Buttons -->
+    <mat-card class="actions-card">
+      <mat-card-content>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="exportResults()">
+            <i class="material-icons">download</i>
+            Export Results
+          </button>
+          <button mat-raised-button color="accent" (click)="resetProcessing()">
+            <i class="material-icons">refresh</i>
+            Process New Document
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Processing History -->
+  <mat-card *ngIf="processingHistory.length > 0" class="history-card">
+    <mat-card-header>
+      <mat-card-title>
+        <i class="material-icons">history</i>
+        Processing History
+      </mat-card-title>
+      <button mat-icon-button (click)="clearHistory()" matTooltip="Clear History">
+        <i class="material-icons">clear</i>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="history-list">
+        <div class="history-item" *ngFor="let item of processingHistory; let i = index">
+          <div class="history-header">
+            <span class="history-type">{{ item.documentData.documentType | titlecase }}</span>
+            <span class="history-time">{{ item.timestamp | date:'short' }}</span>
+            <span class="history-status" [ngClass]="getValidationStatusClass(item.validationResult)">
+              {{ item.validationResult.isValid ? 'Valid' : 'Invalid' }}
+            </span>
+          </div>
+          <div class="history-details">
+            <span class="confidence">Confidence: {{ item.documentData.confidence.toFixed(1) }}%</span>
+            <span class="quality">Quality: {{ item.validationResult.qualityScore.toFixed(1) }}%</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div> 

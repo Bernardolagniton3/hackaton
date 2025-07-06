@@ -1,0 +1,83 @@
+/* User Profile Styles */
+.user-stats {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px 0;
+}
+
+.stat-item i {
+  color: #666;
+  font-size: 18px;
+}
+
+.stat-item span {
+  color: #333;
+  font-size: 14px;
+}
+
+/* Form Styles */
+.example-full-width {
+  width: 100%;
+}
+
+/* Button Styles */
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.btn i {
+  font-size: 18px;
+}
+
+.spinner {
+  margin-right: 8px;
+}
+
+/* Card Styles */
+.card-header h4 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-header h4 i {
+  color: #fff;
+}
+
+/* Success and Error Snackbar Styles */
+.success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 15px;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .pull-right {
+    float: none !important;
+  }
+} 

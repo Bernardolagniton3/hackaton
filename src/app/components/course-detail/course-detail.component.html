@@ -1,0 +1,324 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="text-center">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading course...</p>
+    </div>
+
+    <!-- Course Detail View -->
+    <div *ngIf="!isLoading && course && !isLessonView">
+      <!-- Course Header -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card course-header-card">
+            <div class="course-header-image" [style.background-image]="'url(' + (course.imageUrl || 'assets/img/courses/default.jpg') + ')'">
+              <div class="course-header-overlay">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="course-header-content">
+                        <div class="course-category-badge">
+                          <i class="material-icons">{{ getCategoryIcon(course.category) }}</i>
+                          <span>{{ course.category }}</span>
+                        </div>
+                        <h1 class="course-title">{{ course.title }}</h1>
+                        <p class="course-description">{{ course.description }}</p>
+                        <div class="course-meta">
+                          <div class="meta-item">
+                            <i class="material-icons">person</i>
+                            <span>{{ course.instructor }}</span>
+                          </div>
+                          <div class="meta-item">
+                            <i class="material-icons">schedule</i>
+                            <span>{{ course.duration }} hours</span>
+                          </div>
+                          <div class="meta-item">
+                            <i class="material-icons">group</i>
+                            <span>{{ course.enrolledStudents }} students</span>
+                          </div>
+                          <div class="meta-item">
+                            <i class="material-icons">star</i>
+                            <span>{{ course.rating }}</span>
+                          </div>
+                        </div>
+                        <div class="course-level">
+                          <span class="badge badge-{{ getLevelColor(course.level) }}">
+                            {{ course.level | titlecase }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="course-enrollment-card">
+                        <div class="enrollment-price">
+                          <span class="price">${{ course.price }}</span>
+                        </div>
+                        <div class="enrollment-actions">
+                          <button *ngIf="!enrollment" 
+                                  mat-raised-button 
+                                  color="primary" 
+                                  class="enroll-btn"
+                                  (click)="enrollInCourse()">
+                            <i class="material-icons">add</i>
+                            Enroll Now
+                          </button>
+                          <div *ngIf="enrollment" class="enrollment-status">
+                            <div class="progress-section">
+                              <div class="progress-info">
+                                <span>Progress: {{ getProgressPercentage() }}%</span>
+                                <span>{{ getCompletedLessonsCount() }}/{{ getTotalLessonsCount() }} lessons</span>
+                              </div>
+                              <mat-progress-bar 
+                                mode="determinate" 
+                                [value]="getProgressPercentage()"
+                                class="progress-bar">
+                              </mat-progress-bar>
+                            </div>
+                            <div class="status-badge status-{{ enrollment.status }}">
+                              {{ enrollment.status | titlecase }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Content -->
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Lessons Section -->
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title">
+                <i class="material-icons">library_books</i>
+                Course Lessons
+              </h4>
+            </div>
+            <div class="card-body">
+              <div class="lessons-list">
+                <div *ngFor="let lesson of lessons; let i = index" 
+                     class="lesson-item"
+                     [ngClass]="{
+                       'completed': isLessonCompleted(lesson.id),
+                       'current': lesson.order === getCurrentLesson(),
+                       'locked': !canAccessLesson(lesson)
+                     }">
+                  <div class="lesson-header">
+                    <div class="lesson-number">
+                      <span class="number">{{ lesson.order }}</span>
+                    </div>
+                    <div class="lesson-info">
+                      <h5 class="lesson-title">{{ lesson.title }}</h5>
+                      <p class="lesson-description">{{ lesson.description }}</p>
+                      <div class="lesson-meta">
+                        <span class="duration">
+                          <i class="material-icons">schedule</i>
+                          {{ lesson.duration }} min
+                        </span>
+                        <span *ngIf="lesson.materials.length > 0" class="materials">
+                          <i class="material-icons">attachment</i>
+                          {{ lesson.materials.length }} materials
+                        </span>
+                        <span *ngIf="lesson.quiz" class="quiz">
+                          <i class="material-icons">quiz</i>
+                          Quiz available
+                        </span>
+                      </div>
+                    </div>
+                    <div class="lesson-status">
+                      <div *ngIf="isLessonCompleted(lesson.id)" class="completed-icon">
+                        <i class="material-icons">check_circle</i>
+                      </div>
+                      <div *ngIf="!canAccessLesson(lesson)" class="locked-icon">
+                        <i class="material-icons">lock</i>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="lesson-actions">
+                    <button *ngIf="canAccessLesson(lesson) && !isLessonCompleted(lesson.id)"
+                            mat-raised-button 
+                            color="primary"
+                            (click)="startLesson(lesson)"
+                            class="start-btn">
+                      <i class="material-icons">play_arrow</i>
+                      Start Lesson
+                    </button>
+                    <button *ngIf="isLessonCompleted(lesson.id)"
+                            mat-raised-button 
+                            color="accent"
+                            (click)="startLesson(lesson)"
+                            class="review-btn">
+                      <i class="material-icons">refresh</i>
+                      Review
+                    </button>
+                    <button *ngIf="lesson.quiz && canAccessLesson(lesson)"
+                            mat-stroked-button
+                            color="primary"
+                            (click)="takeQuiz(lesson)"
+                            class="quiz-btn">
+                      <i class="material-icons">quiz</i>
+                      Take Quiz
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <!-- Course Info -->
+          <div class="card">
+            <div class="card-header card-header-info">
+              <h4 class="card-title">
+                <i class="material-icons">info</i>
+                Course Information
+              </h4>
+            </div>
+            <div class="card-body">
+              <div class="info-item">
+                <i class="material-icons">schedule</i>
+                <div class="info-content">
+                  <span class="label">Estimated Time</span>
+                  <span class="value">{{ getEstimatedTime() }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="material-icons">library_books</i>
+                <div class="info-content">
+                  <span class="label">Total Lessons</span>
+                  <span class="value">{{ getTotalLessonsCount() }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="material-icons">check_circle</i>
+                <div class="info-content">
+                  <span class="label">Completed</span>
+                  <span class="value">{{ getCompletedLessonsCount() }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="material-icons">quiz</i>
+                <div class="info-content">
+                  <span class="label">Quizzes</span>
+                  <span class="value">{{ getQuizzesCount() }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Materials -->
+          <div class="card" *ngIf="hasMaterials()">
+            <div class="card-header card-header-success">
+              <h4 class="card-title">
+                <i class="material-icons">attachment</i>
+                Course Materials
+              </h4>
+            </div>
+            <div class="card-body">
+              <div class="materials-list">
+                <div *ngFor="let lesson of lessons" class="lesson-materials">
+                  <h6 *ngIf="lesson.materials.length > 0" class="lesson-title">{{ lesson.title }}</h6>
+                  <div *ngFor="let material of lesson.materials" class="material-item">
+                    <i class="material-icons">description</i>
+                    <span class="material-name">{{ material }}</span>
+                    <button mat-icon-button 
+                            color="primary"
+                            (click)="downloadMaterial(material)"
+                            class="download-btn">
+                      <i class="material-icons">download</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lesson View -->
+    <div *ngIf="isLessonView && selectedLesson" class="lesson-view">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <div class="lesson-header-content">
+                <button mat-icon-button 
+                        color="primary"
+                        (click)="backToCourse()"
+                        class="back-btn">
+                  <i class="material-icons">arrow_back</i>
+                </button>
+                <div class="lesson-title-section">
+                  <h4 class="card-title">Lesson {{ selectedLesson.order }}: {{ selectedLesson.title }}</h4>
+                  <p class="lesson-description">{{ selectedLesson.description }}</p>
+                </div>
+                <div class="lesson-actions">
+                  <button mat-raised-button 
+                          color="accent"
+                          (click)="completeLesson(selectedLesson)"
+                          class="complete-btn">
+                    <i class="material-icons">check</i>
+                    Complete Lesson
+                  </button>
+                  <button *ngIf="selectedLesson.quiz"
+                          mat-stroked-button
+                          color="primary"
+                          (click)="takeQuiz(selectedLesson)"
+                          class="quiz-btn">
+                    <i class="material-icons">quiz</i>
+                    Take Quiz
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="lesson-content">
+                <div class="content-section">
+                  <h5>Lesson Content</h5>
+                  <div class="content-text">
+                    {{ selectedLesson.content }}
+                  </div>
+                </div>
+
+                <div *ngIf="selectedLesson.videoUrl" class="video-section">
+                  <h5>Video</h5>
+                  <div class="video-placeholder">
+                    <i class="material-icons">play_circle_outline</i>
+                    <p>Video content would be displayed here</p>
+                    <p class="video-url">{{ selectedLesson.videoUrl }}</p>
+                  </div>
+                </div>
+
+                <div *ngIf="selectedLesson.materials.length > 0" class="materials-section">
+                  <h5>Additional Materials</h5>
+                  <div class="materials-grid">
+                    <div *ngFor="let material of selectedLesson.materials" 
+                         class="material-card">
+                      <i class="material-icons">description</i>
+                      <span class="material-name">{{ material }}</span>
+                      <button mat-icon-button 
+                              color="primary"
+                              (click)="downloadMaterial(material)"
+                              class="download-btn">
+                        <i class="material-icons">download</i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

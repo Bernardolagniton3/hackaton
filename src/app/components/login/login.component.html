@@ -1,0 +1,79 @@
+<div class="login-container">
+  <div class="login-card">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <i class="material-icons">lock</i>
+          Login to Dashboard
+        </mat-card-title>
+        <mat-card-subtitle>
+          Enter your credentials to access the system
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" placeholder="Enter your username">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+              {{ getErrorMessage('username') }}
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')">
+              {{ getErrorMessage('username') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Enter your password">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+              {{ getErrorMessage('password') }}
+            </mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" class="login-button" [disabled]="!loginForm.valid || isLoading">
+            <mat-spinner *ngIf="isLoading" diameter="20" class="spinner"></mat-spinner>
+            <span *ngIf="!isLoading">
+              <i class="material-icons">login</i>
+              Login
+            </span>
+          </button>
+        </form>
+
+        <!-- Demo Users Section -->
+        <div class="demo-users-section">
+          <h3>
+            <i class="material-icons">people</i>
+            Demo Users
+          </h3>
+          <p class="demo-description">Click on any user to fill the login form:</p>
+          
+          <div class="demo-users-grid">
+            <mat-card *ngFor="let user of demoUsers" class="demo-user-card" (click)="fillDemoUser(user)">
+              <mat-card-content>
+                <div class="demo-user-info">
+                  <div class="user-avatar">
+                    <i class="material-icons">account_circle</i>
+                  </div>
+                  <div class="user-details">
+                    <h4>{{ user.username }}</h4>
+                    <p class="user-role">{{ user.role }}</p>
+                    <p class="user-password">Password: {{ user.password }}</p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div> 

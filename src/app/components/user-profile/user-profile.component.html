@@ -1,0 +1,124 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-8">
+              <div class="card">
+                  <div class="card-header card-header-danger">
+                      <h4 class="card-title">
+                          <i class="material-icons">person</i>
+                          User Profile
+                      </h4>
+                      <p class="card-category">Manage your profile information</p>
+                  </div>
+                  <div class="card-body">
+                      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+                          <div class="row">
+                              <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="First Name" formControlName="firstName" [readonly]="!isEditing">
+                                    <mat-error *ngIf="profileForm.get('firstName')?.hasError('required')">
+                                        {{ getErrorMessage('firstName') }}
+                                    </mat-error>
+                                    <mat-error *ngIf="profileForm.get('firstName')?.hasError('minlength')">
+                                        {{ getErrorMessage('firstName') }}
+                                    </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-md-6">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Last Name" formControlName="lastName" [readonly]="!isEditing">
+                                    <mat-error *ngIf="profileForm.get('lastName')?.hasError('required')">
+                                        {{ getErrorMessage('lastName') }}
+                                    </mat-error>
+                                    <mat-error *ngIf="profileForm.get('lastName')?.hasError('minlength')">
+                                        {{ getErrorMessage('lastName') }}
+                                    </mat-error>
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                  <input matInput placeholder="Username" formControlName="username" [readonly]="!isEditing">
+                                  <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+                                      {{ getErrorMessage('username') }}
+                                  </mat-error>
+                                  <mat-error *ngIf="profileForm.get('username')?.hasError('minlength')">
+                                      {{ getErrorMessage('username') }}
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div class="col-md-6">
+                                  <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Email address" type="email" formControlName="email" [readonly]="!isEditing">
+                                    <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+                                        {{ getErrorMessage('email') }}
+                                    </mat-error>
+                                    <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                                        {{ getErrorMessage('email') }}
+                                    </mat-error>
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          
+                          <div class="row" *ngIf="isEditing">
+                              <div class="col-md-12">
+                                  <button mat-raised-button type="submit" class="btn btn-danger pull-right" [disabled]="!profileForm.valid || isLoading">
+                                      <mat-spinner *ngIf="isLoading" diameter="20" class="spinner"></mat-spinner>
+                                      <span *ngIf="!isLoading">
+                                          <i class="material-icons">save</i>
+                                          Save Changes
+                                      </span>
+                                  </button>
+                                  <button mat-raised-button type="button" class="btn btn-secondary pull-right" (click)="toggleEdit()" style="margin-right: 10px;">
+                                      <i class="material-icons">cancel</i>
+                                      Cancel
+                                  </button>
+                              </div>
+                          </div>
+                          
+                          <div class="row" *ngIf="!isEditing">
+                              <div class="col-md-12">
+                                  <button mat-raised-button type="button" class="btn btn-primary pull-right" (click)="toggleEdit()">
+                                      <i class="material-icons">edit</i>
+                                      Edit Profile
+                                  </button>
+                              </div>
+                          </div>
+                          
+                          <div class="clearfix"></div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="card card-profile">
+                  <div class="card-avatar">
+                      <a href="javascript:void(0)">
+                          <img class="img" [src]="currentUser?.avatar || './assets/img/faces/marc.jpg'" />
+                      </a>
+                  </div>
+                  <div class="card-body">
+                      <h6 class="card-category text-gray">{{ getUserRole() }}</h6>
+                      <h4 class="card-title">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h4>
+                      <p class="card-description">
+                          <strong>Username:</strong> {{ currentUser?.username }}<br>
+                          <strong>Email:</strong> {{ currentUser?.email }}<br>
+                          <strong>Last Login:</strong> {{ getLastLogin() }}
+                      </p>
+                      <div class="user-stats">
+                          <div class="stat-item">
+                              <i class="material-icons">person</i>
+                              <span>User ID: {{ currentUser?.id }}</span>
+                          </div>
+                          <div class="stat-item">
+                              <i class="material-icons">security</i>
+                              <span>Role: {{ getUserRole() }}</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div> 

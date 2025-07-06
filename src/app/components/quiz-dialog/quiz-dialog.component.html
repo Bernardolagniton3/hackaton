@@ -1,0 +1,168 @@
+<div class="quiz-dialog">
+  <!-- Quiz Header -->
+  <div class="quiz-header">
+    <h2 mat-dialog-title>
+      <i class="material-icons">quiz</i>
+      {{ lessonTitle }} - Quiz
+    </h2>
+    <div class="quiz-info">
+      <div class="timer">
+        <i class="material-icons">schedule</i>
+        <span>{{ getTimeDisplay() }}</span>
+      </div>
+      <div class="progress">
+        <span>Question {{ currentQuestionIndex + 1 }} of {{ quiz.questions.length }}</span>
+        <mat-progress-bar 
+          mode="determinate" 
+          [value]="getProgressPercentage()"
+          class="progress-bar">
+        </mat-progress-bar>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Content -->
+  <mat-dialog-content class="quiz-content">
+    <!-- Quiz Questions -->
+    <div *ngIf="!isQuizCompleted" class="question-container">
+      <div class="question-header">
+        <span class="question-type">{{ getQuestionTypeDisplay(getCurrentQuestion().type) }}</span>
+        <span class="question-points">{{ getCurrentQuestion().points }} points</span>
+      </div>
+      
+      <div class="question-text">
+        <h3>{{ getCurrentQuestion().text }}</h3>
+      </div>
+
+      <!-- Multiple Choice Options -->
+      <div *ngIf="getCurrentQuestion().type === 'multiple-choice'" class="options-container">
+        <div *ngFor="let option of getCurrentQuestion().options; let i = index" 
+             class="option-item"
+             [ngClass]="{ 'selected': isAnswerSelected(i) }"
+             (click)="selectAnswer(i)">
+          <div class="option-number">{{ String.fromCharCode(65 + i) }}</div>
+          <div class="option-text">{{ option }}</div>
+        </div>
+      </div>
+
+      <!-- True/False Options -->
+      <div *ngIf="getCurrentQuestion().type === 'true-false'" class="options-container">
+        <div class="option-item"
+             [ngClass]="{ 'selected': isAnswerSelected(true) }"
+             (click)="selectAnswer(true)">
+          <div class="option-number">A</div>
+          <div class="option-text">True</div>
+        </div>
+        <div class="option-item"
+             [ngClass]="{ 'selected': isAnswerSelected(false) }"
+             (click)="selectAnswer(false)">
+          <div class="option-number">B</div>
+          <div class="option-text">False</div>
+        </div>
+      </div>
+
+      <!-- Essay Answer -->
+      <div *ngIf="getCurrentQuestion().type === 'essay'" class="essay-container">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Your Answer</mat-label>
+          <textarea matInput 
+                    rows="6" 
+                    placeholder="Write your answer here..."
+                    [(ngModel)]="answers[currentQuestionIndex]">
+          </textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Quiz Results -->
+    <div *ngIf="isQuizCompleted" class="results-container">
+      <div class="results-header">
+        <i class="material-icons" [ngClass]="quizResults.passed ? 'passed' : 'failed'">
+          {{ quizResults.passed ? 'check_circle' : 'cancel' }}
+        </i>
+        <h3>{{ quizResults.passed ? 'Quiz Passed!' : 'Quiz Failed' }}</h3>
+      </div>
+
+      <div class="results-stats">
+        <div class="stat-item">
+          <span class="stat-label">Score</span>
+          <span class="stat-value">{{ quizResults.score }}%</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Correct Answers</span>
+          <span class="stat-value">{{ quizResults.correctAnswers }}/{{ quizResults.totalQuestions }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Time Spent</span>
+          <span class="stat-value">{{ Math.floor(quizResults.timeSpent / 60) }}:{{ (quizResults.timeSpent % 60).toString().padStart(2, '0') }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Passing Score</span>
+          <span class="stat-value">{{ quiz.passingScore }}%</span>
+        </div>
+      </div>
+
+      <div class="results-message">
+        <p *ngIf="quizResults.passed">
+          Congratulations! You have successfully completed the quiz for this lesson.
+        </p>
+        <p *ngIf="!quizResults.passed">
+          You need to score at least {{ quiz.passingScore }}% to pass. Please review the lesson and try again.
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Grading your quiz...</p>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Quiz Actions -->
+  <mat-dialog-actions class="quiz-actions">
+    <!-- Navigation Buttons -->
+    <div *ngIf="!isQuizCompleted" class="navigation-buttons">
+      <button mat-button 
+              [disabled]="currentQuestionIndex === 0"
+              (click)="previousQuestion()">
+        <i class="material-icons">arrow_back</i>
+        Previous
+      </button>
+      
+      <button *ngIf="currentQuestionIndex < quiz.questions.length - 1"
+              mat-raised-button 
+              color="primary"
+              (click)="nextQuestion()">
+        Next
+        <i class="material-icons">arrow_forward</i>
+      </button>
+      
+      <button *ngIf="currentQuestionIndex === quiz.questions.length - 1"
+              mat-raised-button 
+              color="accent"
+              (click)="submitQuiz()">
+        <i class="material-icons">send</i>
+        Submit Quiz
+      </button>
+    </div>
+
+    <!-- Results Actions -->
+    <div *ngIf="isQuizCompleted" class="results-actions">
+      <button *ngIf="!quizResults.passed"
+              mat-raised-button 
+              color="primary"
+              (click)="retakeQuiz()">
+        <i class="material-icons">refresh</i>
+        Retake Quiz
+      </button>
+      
+      <button mat-raised-button 
+              color="accent"
+              (click)="closeDialog()">
+        <i class="material-icons">close</i>
+        Close
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div> 

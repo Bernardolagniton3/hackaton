@@ -1,0 +1,124 @@
+<div class="document-capture-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <i class="material-icons">camera_alt</i>
+        Document Capture
+      </mat-card-title>
+      <mat-card-subtitle>
+        Capture documents using camera or upload image files
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Tab Navigation -->
+      <mat-tab-group>
+        <!-- Camera Tab -->
+        <mat-tab label="Camera">
+          <div class="camera-section">
+            <div class="webcam-container" *ngIf="!webcamImage">
+              <webcam
+                [height]="400"
+                [width]="600"
+                [trigger]="triggerObservable"
+                [videoOptions]="videoOptions"
+                (initError)="handleInitError($event)"
+                (imageCapture)="handleImage($event)"
+                (cameraSwitched)="cameraWasSwitched($event)">
+              </webcam>
+              
+              <div class="camera-controls">
+                <button mat-raised-button color="primary" (click)="triggerSnapshot()">
+                  <i class="material-icons">camera</i>
+                  Capture Document
+                </button>
+                
+                <button mat-button *ngIf="multipleWebcamsAvailable" (click)="toggleWebcam()">
+                  <i class="material-icons">switch_camera</i>
+                  Switch Camera
+                </button>
+              </div>
+            </div>
+
+            <!-- Captured Image Preview -->
+            <div class="captured-image" *ngIf="webcamImage">
+              <img [src]="webcamImage.imageAsDataUrl" alt="Captured document">
+              <div class="image-controls">
+                <button mat-raised-button color="primary" (click)="triggerSnapshot()">
+                  <i class="material-icons">refresh</i>
+                  Retake Photo
+                </button>
+                <button mat-button (click)="clearSelection()">
+                  <i class="material-icons">clear</i>
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Webcam Errors -->
+            <div class="error-messages" *ngIf="errors.length > 0">
+              <mat-error *ngFor="let error of errors">
+                <i class="material-icons">error</i>
+                {{ error.message }}
+              </mat-error>
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Upload Tab -->
+        <mat-tab label="Upload">
+          <div class="upload-section">
+            <div class="upload-area" 
+                 (dragover)="onDragOver($event)"
+                 (drop)="onDrop($event)"
+                 [class.drag-over]="false">
+              
+              <div class="upload-content" *ngIf="!selectedFile">
+                <i class="material-icons upload-icon">cloud_upload</i>
+                <h3>Drag & Drop or Click to Upload</h3>
+                <p>Supported formats: {{ getSupportedFileTypes() }}</p>
+                <p>Maximum size: {{ getMaxFileSize() }}</p>
+                
+                <button mat-raised-button color="primary" (click)="fileInput.click()">
+                  <i class="material-icons">file_upload</i>
+                  Choose File
+                </button>
+                
+                <input #fileInput type="file" 
+                       [accept]="getSupportedFileTypes()"
+                       (change)="onFileSelected($event)"
+                       style="display: none;">
+              </div>
+
+              <!-- Uploaded File Preview -->
+              <div class="file-preview" *ngIf="selectedFile">
+                <img [src]="previewUrl" alt="Uploaded document" *ngIf="previewUrl">
+                <div class="file-info">
+                  <h4>{{ selectedFile.name }}</h4>
+                  <p>Size: {{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+                  <p>Type: {{ selectedFile.type }}</p>
+                </div>
+                <div class="file-controls">
+                  <button mat-raised-button color="primary" (click)="fileInput.click()">
+                    <i class="material-icons">refresh</i>
+                    Choose Different File
+                  </button>
+                  <button mat-button (click)="clearSelection()">
+                    <i class="material-icons">clear</i>
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+
+      <!-- Processing Indicator -->
+      <div class="processing-indicator" *ngIf="isProcessing">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Processing document...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div> 
