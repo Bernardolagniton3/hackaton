@@ -8,6 +8,7 @@ declare interface RouteInfo {
     title: string;
     icon: string;
     class: string;
+    children?: RouteInfo[];
 }
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
@@ -18,7 +19,15 @@ export const ROUTES: RouteInfo[] = [
     { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
     { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' },
     { path: '/ocr-processor', title: 'OCR Document Scanner',  icon:'document_scanner', class: '' },
-    { path: '/lms', title: 'Learning Management',  icon:'school', class: '' },
+    {
+      path: '/lms',
+      title: 'Learning Management',
+      icon: 'school',
+      class: '',
+      children: [
+        { path: '/lms/automation-response', title: 'Automation Response', icon: 'autorenew', class: '' }
+      ]
+    },
     { path: '/upgrade', title: 'Upgrade to PRO',  icon:'unarchive', class: 'active-pro' },
 ];
 

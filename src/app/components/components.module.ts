@@ -28,6 +28,7 @@ import { DocumentCaptureComponent } from './document-capture/document-capture.co
 import { LMSDashboardComponent } from './lms-dashboard/lms-dashboard.component';
 import { CourseDetailComponent } from './course-detail/course-detail.component';
 import { QuizDialogComponent } from './quiz-dialog/quiz-dialog.component';
+import { AutomationResponseComponent } from './automation-response/automation-response.component';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import { QuizDialogComponent } from './quiz-dialog/quiz-dialog.component';
     DocumentCaptureComponent,
     LMSDashboardComponent,
     CourseDetailComponent,
-    QuizDialogComponent
+    QuizDialogComponent,
+    AutomationResponseComponent
   ],
   exports: [
     FooterComponent,
@@ -72,7 +74,8 @@ import { QuizDialogComponent } from './quiz-dialog/quiz-dialog.component';
     DocumentCaptureComponent,
     LMSDashboardComponent,
     CourseDetailComponent,
-    QuizDialogComponent
+    QuizDialogComponent,
+    AutomationResponseComponent
   ]
 })
 export class ComponentsModule { }

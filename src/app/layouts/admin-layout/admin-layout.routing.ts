@@ -11,6 +11,7 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { OCRPageComponent } from '../../components/ocr-page/ocr-page.component';
 import { LMSDashboardComponent } from '../../components/lms-dashboard/lms-dashboard.component';
 import { CourseDetailComponent } from '../../components/course-detail/course-detail.component';
+import { AutomationResponseComponent } from '../../components/automation-response/automation-response.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -66,4 +67,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'lms',            component: LMSDashboardComponent },
     { path: 'course/:id',     component: CourseDetailComponent },
     { path: 'upgrade',        component: UpgradeComponent },
+    { path: 'lms/automation-response', component: AutomationResponseComponent },
 ];
