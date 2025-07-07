@@ -100,6 +100,11 @@
                 <i class="material-icons">library_books</i>
                 Course Lessons
               </h4>
+              <div class="lesson-tracker">
+                <span class="badge badge-success">{{ getLessonsStatusCounts().completed }} Completed</span>
+                <span class="badge badge-warning">{{ getLessonsStatusCounts().inProgress }} In Progress</span>
+                <span class="badge badge-secondary">{{ getLessonsStatusCounts().notStarted }} Not Started</span>
+              </div>
             </div>
             <div class="card-body">
               <div class="lessons-list">
@@ -129,6 +134,14 @@
                         <span *ngIf="lesson.quiz" class="quiz">
                           <i class="material-icons">quiz</i>
                           Quiz available
+                        </span>
+                        <span class="lesson-status-badge" [ngClass]="{
+                          'badge-success': getLessonStatus(lesson) === 'completed',
+                          'badge-warning': getLessonStatus(lesson) === 'in-progress',
+                          'badge-secondary': getLessonStatus(lesson) === 'not-started'
+                        }">
+                          {{ getLessonStatus(lesson) | titlecase }}
+                          <button *ngIf="getLessonStatus(lesson) === 'in-progress' && !isLessonCompleted(lesson.id)" class="btn btn-sm btn-success ml-2" (click)="$event.stopPropagation(); completeLesson(lesson)">Done</button>
                         </span>
                       </div>
                     </div>
@@ -227,7 +240,7 @@
                 <div *ngFor="let lesson of lessons" class="lesson-materials">
                   <h6 *ngIf="lesson.materials.length > 0" class="lesson-title">{{ lesson.title }}</h6>
                   <div *ngFor="let material of lesson.materials" class="material-item">
-                    <i class="material-icons">description</i>
+                    <i class="material-icons">description 11111</i>
                     <span class="material-name">{{ material }}</span>
                     <button mat-icon-button 
                             color="primary"
@@ -266,8 +279,8 @@
                           color="accent"
                           (click)="completeLesson(selectedLesson)"
                           class="complete-btn">
-                    <i class="material-icons">check</i>
-                    Complete Lesson
+                    <i class="material-icons">done</i>
+                    Done
                   </button>
                   <button *ngIf="selectedLesson.quiz"
                           mat-stroked-button

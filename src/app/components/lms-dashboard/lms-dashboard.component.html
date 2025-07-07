@@ -146,7 +146,7 @@
 
             <!-- Course Grid -->
             <div *ngIf="!isLoading" class="row">
-              <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of getFilteredCourses()">
+              <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of getFilteredCourses()" (click)="goToCourse(course)" style="cursor:pointer;">
                 <div class="card course-card">
                   <div class="card-header" [style.background-image]="'url(' + (course.imageUrl || 'assets/img/courses/default.jpg') + ')'">
                     <div class="course-overlay">

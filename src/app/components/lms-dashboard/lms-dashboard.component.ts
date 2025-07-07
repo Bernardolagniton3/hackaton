@@ -17,7 +17,7 @@ export class LMSDashboardComponent implements OnInit {
   selectedCategory = 'all';
   selectedLevel = 'all';
 
-  categories = ['all', 'Programming', 'Marketing', 'Design', 'Business'];
+  categories = ['all', 'Managing earnings and expenses', 'Fuel-saving tips', 'Tax compliance for TNVS drivers', 'Budgeting and savings'];
   levels = ['all', 'beginner', 'intermediate', 'advanced'];
 
   constructor(
@@ -152,5 +152,9 @@ export class LMSDashboardComponent implements OnInit {
 
   getCompletedCourses(): number {
     return this.enrollments.filter(e => e.status === 'completed').length;
+  }
+
+  goToCourse(course: Course): void {
+    this.router.navigate(['/course', course.id]);
   }
 } 

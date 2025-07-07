@@ -190,10 +190,10 @@ export class CourseDetailComponent implements OnInit {
 
   getCategoryIcon(category: string): string {
     switch (category) {
-      case 'Programming': return 'code';
-      case 'Marketing': return 'trending_up';
+      case 'Managing earnings and expenses': return 'code';
+      case 'Fuel-saving tips': return 'trending_up';
       case 'Design': return 'palette';
-      case 'Business': return 'business';
+      case 'Budgeting and savings': return 'business';
       default: return 'school';
     }
   }
@@ -216,5 +216,22 @@ export class CourseDetailComponent implements OnInit {
 
   hasMaterials(): boolean {
     return this.lessons.some(l => l.materials.length > 0);
+  }
+
+  getLessonStatus(lesson: Lesson): 'completed' | 'in-progress' | 'not-started' {
+    if (this.isLessonCompleted(lesson.id)) return 'completed';
+    if (lesson.order === this.getCurrentLesson()) return 'in-progress';
+    return 'not-started';
+  }
+
+  getLessonsStatusCounts(): { completed: number; inProgress: number; notStarted: number } {
+    let completed = 0, inProgress = 0, notStarted = 0;
+    for (const lesson of this.lessons) {
+      const status = this.getLessonStatus(lesson);
+      if (status === 'completed') completed++;
+      else if (status === 'in-progress') inProgress++;
+      else notStarted++;
+    }
+    return { completed, inProgress, notStarted };
   }
 } 
